@@ -15,12 +15,12 @@ inline模式：一个小型的webpack-dev-server客户端会作为入口文件�
 启动inline模式有两种方式：
 1. 命令行：webpack-dev-server --inline
 使用--inline选项会自动把webpack-dev-server客户端加到webpack的入口文件配置中。
-2. Node.js API方式需要手动把webpack-dev-server/client?http://localhost:8080加到配置文件的入口文件配置处。该方式运行webpack-dev-server就无需使用--inline
+2. webpack.config.js配置方式需要手动把webpack-dev-server/client?http://localhost:8080加到配置文件的入口文件配置处。该方式运行webpack-dev-server就无需使用--inline
 
 ## Hot module reload
 在前端代码变动的时候无需整个刷新页面，只把变化的部分替换掉。
 命令行方式：--hot开启HMR，它把webpack/hot/dev-server(node_module/webpack/hot/dev-derver.js)入口点加入到了webpack配置文件中。
-Node.js API方式：
+webpack.config.js配置方式：
 1) 把webpack/hot/dev-server加入到webpack配置文件的entry项；
 2) 把new webpack.HotModuleReplacementPlugin()加入到webpack配置文件的plugins项；
 3) 把hot:true加入到webpack-dev-server的配置项里面。
