@@ -18,6 +18,21 @@ inline模式：一个小型的webpack-dev-server客户端会作为入口文件�
 2. Node.js API方式需要手动把webpack-dev-server/client?http://localhost:8080加到配置文件的入口文件配置处。该方式运行webpack-dev-server就无需使用--inline
 
 ## Hot module reload
+在前端代码变动的时候无需整个刷新页面，只把变化的部分替换掉。
+命令行方式：--hot开启HMR，它把webpack/hot/dev-server(node_module/webpack/hot/dev-derver.js)入口点加入到了webpack配置文件中。
+Node.js API方式：
+1) 把webpack/hot/dev-server加入到webpack配置文件的entry项；
+2) 把new webpack.HotModuleReplacementPlugin()加入到webpack配置文件的plugins项；
+3) 把hot:true加入到webpack-dev-server的配置项里面。
+
+### 代码修改
+要使HMR功能生效，还需要做一件事情，就是要在应用热替换的模块或者根模块里面加入允许热替换的代码。否则，热替换不会生效，还是会重刷整个页面。
+```js
+if(module.hot){
+    module.hot.accept();
+}
+```
+也可以使用一些插件去完成这个工作，例如webpack-module-hot-accept插件。不过，webpack-dev-server HMR结合react-hot-loader使用的时候，react-hot-loader会去做这个工作。
 ### Simplest CONFIG
 
 ### Start
