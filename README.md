@@ -1,8 +1,9 @@
 # webpack.config
 ## install
+```shell
 npm install webpack webpack-dev-server -g
 npm install webpack webpack-dev-server css-loader style-loader less-loader --save
-
+```
 ## Hot module reload
 
 ### note
