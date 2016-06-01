@@ -42,18 +42,57 @@ $ webpack-dev-server --hot --inline --config webpack.cmd.config.js
 * --inline 开启自动刷新inline模式，它把`webpack-dev-server/client?http://localhost:8080`配置到了webpack config文件中entry的入口处。
 * --config 指定读取webpack配置文件
 
-##### webpack.config.js 配置
+基本配置 webpack.cmd.config.js：
+```js
+var webpack = require("webpack");
+module.exports = {
+	entry: [
+		'./src/js/entry.js'
+	],
+	output: {
+		publicPath: 'http://localhost:8080/dist/js/',
+		path: './dist/js/',
+		filename: 'bundle.js'
+	},
+	module: {
+		loaders: [
+			{ test: /\.less$/, loader: "style!css!less"}
+		]
+	}
+}
+```
+##### webpack.config.js启动
 1. 把`webpack/hot/dev-server`加入到webpack配置文件的entry项；
 2. 把`webpack-dev-server/client?http://localhost:8080`添加到webpack配置文件的entry项；
 3. 设置output的publicPath为服务器`http://localhost:8000/dist/js/`；
 4. 在plugins中添加`new webpack.HotModuleReplacementPlugin()`;
-5. 添加devServer配置：
+5. 添加devServer配置：hot: true
+
+基本配置 webpack.config.js：
 ```js
+var webpack = require("webpack");
 module.exports = {
-    //...
-    devServer: {
-        hot: true
-    }
+	entry: [
+		'webpack-dev-server/client?http://localhost:8080',
+		'webpack/hot/dev-server',
+		'./src/js/entry.js'
+	],
+	output: {
+		publicPath: 'http://localhost:8080/dist/js/',
+		path: './dist/js/',
+		filename: 'bundle.js'
+	},
+	module: {
+		loaders: [
+			{ test: /\.less$/, loader: "style!css!less"}
+		]
+	},
+	plugins: [
+		new webpack.HotModuleReplacementPlugin()
+	],
+	devServer: {
+		hot: true
+	}
 }
 ```
 最后执行如下命令即可：
@@ -62,6 +101,53 @@ $ webpack-dev-server
 ```
 该webpack.config.js配置如果设置hot为false，则可实现普通的livereload。
 
+##### Node.js API启动
+即在server.js中配置服务器，并启动。
+* server.js
+```js
+//require
+var webpack = require("webpack");
+var WebpackDevServer = require("webpack-dev-server");
+
+//config
+var config = require("./webpack.server.config.js");
+config.entry.unshift("webpack-dev-server/client?http://localhost:8080/", "webpack/hot/dev-server");
+config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
+
+var compiler = webpack(config);
+//server
+var server = new WebpackDevServer(compiler, {
+	hot: true,
+	stats: { colors: true },
+	publicPath: config.output.publicPath
+});
+//listen
+server.listen(8080);
+```
+* webpack.server.config.js
+```js
+var webpack = require("webpack");
+module.exports = {
+	entry: [
+		'./src/js/entry.js'
+	],
+	output: {
+		publicPath: 'http://localhost:8080/dist/js/',
+		path: __dirname + '/dist/js/',
+		filename: 'bundle.js'
+	},
+	module: {
+		loaders: [
+			{ test: /\.less$/, loader: "style!css!less"}
+		]
+	},
+	plugins: []
+}
+```
+执行命令
+```shell
+$ node server.js
+```
 ## 代码修改
 要使HMR功能生效，还需要做一件事情，就是要在应用热替换的模块或者根模块里面加入允许热替换的代码。否则，热替换不会生效，还是会**重刷整个页面**。
 ```js
