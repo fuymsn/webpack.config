@@ -5,17 +5,32 @@ npm install webpack webpack-dev-server -g
 npm install webpack webpack-dev-server css-loader style-loader less-loader --save
 ```
 ## Webpack dev server
-webpack-dev-server是一个小型的node.js Express服务器,它使用webpack-dev-middleware中间件来为通过webpack打包生成的资源文件提供Web服务。它还有一个通过Socket.IO连接着webpack-dev-server服务器的小型运行时程序。webpack-dev-server发送关于编译状态的消息到客户端，客户端根据消息作出响应。
-简单来说，webpack-dev-server就是一个小型的静态文件服务器。
+webpack-dev-server是一个小型的node.js服务器,它使用webpack-dev-middleware中间件来为通过webpack打包生成的资源文件提供Web服务。它还有一个通过Socket.IO连接着webpack-dev-server服务器的小型运行时程序。webpack-dev-server发送关于编译状态的消息到客户端，客户端根据消息作出响应。
 
+简单来说，webpack-dev-server就是一个小型的静态文件服务器。
 ## 自动刷新
-ifrme模式：页面是嵌套在一个iframe下的，在代码发生改动的时候，这个iframe会重新加载
-inline模式：一个小型的webpack-dev-server客户端会作为入口文件打包，这个客户端会在后端代码改变的时候刷新页面。
+webpack-dev-server分为两种自动刷新模式，通常使用inline模式。
+##### ifrme
+页面是嵌套在一个iframe下的，在代码发生改动的时候，这个iframe会重新加载
+##### inline
+一个小型的webpack-dev-server客户端会作为入口文件打包，这个客户端会在后端代码改变的时候刷新页面。
 
 启动inline模式有两种方式：
-1. 命令行：webpack-dev-server --inline
-使用--inline选项会自动把webpack-dev-server客户端加到webpack的入口文件配置中。
-2. webpack.config.js配置方式需要手动把webpack-dev-server/client?http://localhost:8080加到配置文件的入口文件配置处。该方式运行webpack-dev-server就无需使用--inline
+
+**1. 命令行**
+```shell
+$ webpack-dev-server --inline
+```
+使用--inline选项会自动把webpack-dev-server客户端加到webpack的入口文件配置中。这时访问浏览器，你会看见控制台的log信息：
+```shell
+[HMR] Waiting for update signal from WDS...
+[WDS] Hot Module Replacement enabled.
+```
+HMR前缀的信息由webpack/hot/dev-server模块产生，WDS前缀的信息由webpack-dev-server客户端产生。
+
+**2. webpack.config.js配置**
+
+该方式需要手动把webpack-dev-server/client?http://localhost:8080加到配置文件的入口文件配置处。运用此方式运行webpack-dev-server命令就无需使用--inline
 
 ## Hot module reload
 在前端代码变动的时候无需整个刷新页面，只把变化的部分替换掉。
