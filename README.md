@@ -1,5 +1,5 @@
 # webpack.config
-## install
+## Install
 ```shell
 npm install webpack webpack-dev-server -g
 npm install webpack webpack-dev-server css-loader style-loader less-loader --save
@@ -46,12 +46,21 @@ $ webpack-dev-server --hot --inline --config webpack.cmd.config.js
 1. 把`webpack/hot/dev-server`加入到webpack配置文件的entry项；
 2. 把`webpack-dev-server/client?http://localhost:8080`添加到webpack配置文件的entry项；
 3. 设置output的publicPath为服务器`http://localhost:8000/dist/js/`；
-
+4. 在plugins中添加`new webpack.HotModuleReplacementPlugin()`;
+5. 添加devServer配置：
+```js
+module.exports = {
+    //...
+    devServer: {
+        hot: true
+    }
+}
+```
 最后执行如下命令即可：
 ```shell
-$ webpack-dev-server --hot
+$ webpack-dev-server
 ```
-该webpack.config.js配置如果不使用 --hot 并在webpack.config中添加`plugins: new webpack.HotModuleReplacementPlugin()`，则页面刷新可实现普通的livereload。
+该webpack.config.js配置如果设置hot为false，则可实现普通的livereload。
 
 ## 代码修改
 要使HMR功能生效，还需要做一件事情，就是要在应用热替换的模块或者根模块里面加入允许热替换的代码。否则，热替换不会生效，还是会**重刷整个页面**。
